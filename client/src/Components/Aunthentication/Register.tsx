@@ -1,10 +1,21 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
+import {useNavigate} from 'react-router-dom'
 
 export default function Register() {
 
     let [username, setUsername] = useState('');
     let [password, setPassword] = useState('');
+    let navigate = useNavigate();
+    let userToken = sessionStorage.getItem("token")
+
+    useEffect(()=>{
+        if(userToken !== null ){
+            navigate("/")
+          }
+    }, [])
+    
+    
 
 
     const handleUsername = (event: React.ChangeEvent<HTMLInputElement>): void=> {
