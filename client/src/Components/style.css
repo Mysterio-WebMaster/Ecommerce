@@ -1,0 +1,8 @@
+.productBox{
+    border: blanchedalmond 1px solid;
+    width: 95%;
+    height: 100%;
+    display: block;
+    margin: 5px auto;
+    padding: 15px;
+}

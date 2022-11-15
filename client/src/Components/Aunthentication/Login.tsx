@@ -3,6 +3,7 @@ import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {login} from "../Redux/user";
+import Navbar from '../Navbar/Navbar';
 
 
 export default function Login() {
@@ -39,10 +40,8 @@ export default function Login() {
                 window.alert("Invalid Credentials")
             }
             else {
-                console.log(response)
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("user", response.data.user);
-
                 // dispatchUser(login({name: sessionStorage.getItem("user"), token: sessionStorage.getItem("user")}))
                 navigate("/");
             }
@@ -51,6 +50,7 @@ export default function Login() {
 
   return (
     <div>
+        <Navbar />
         <h3>Login</h3>
 
         <div className="FormBox">

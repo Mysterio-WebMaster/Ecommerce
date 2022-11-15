@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import Navbar from '../Navbar/Navbar';
 
 export default function Register() {
 
@@ -46,6 +47,7 @@ export default function Register() {
 
   return (
     <div>
+        <Navbar />
         <h3>Register</h3>
 
         <div className="FormBox">
