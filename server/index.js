@@ -21,6 +21,10 @@ const connection = mariadb.createConnection({
     database: 'ecom'
 });
 
+BigInt.prototype.toJSON = function() {       
+    return this.toString()
+}
+
 // let connection = mysql.createConnection({
 //     host: 'localhost',
 //     user: 'root',
@@ -77,6 +81,41 @@ app.post("/login", (req, res)=>{
         }
     })
 })
+
+app.post("/addtocart", async (req, res)=>{
+    console.log(req.body);
+    connection.query("INSERT INTO cart(pUser, pID, pName, pPrice) VALUES (?, ?, ?, ?)", [req.body.user, req.body.pId, req.body.pName, req.body.pPrice], (err, result)=>{
+        if(err) throw err;
+        console.log(result)
+        //res.send(result)
+        res.send("Inserted");
+    });
+})
+
+app.post("/getCount", async(req, res)=>{
+    connection.query("SELECT COUNT(pID) as proCount FROM cart WHERE pUser = ?", [req.body.username], (err, result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
+app.post("/getCart", async(req, res)=>{
+    connection.query("SELECT * FROM cart WHERE pUser = ?", [req.body.username], (err, allProducts)=>{
+        if(err) throw err;
+        console.log(allProducts)
+            res.send(allProducts);
+    })
+    
+})
+
+app.post("/deleteProduct", async (req, res)=>{
+    connection.query("DELETE FROM cart WHERE pUser = ? and id = ?", [req.body.username, req.body.id], (err, allProducts)=>{
+        if(err) throw err;
+        console.log(allProducts)
+            res.send(allProducts);
+    })
+})
+
 
 app.listen(5000, (err)=>{
     if(err) throw err;
