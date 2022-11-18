@@ -39,6 +39,12 @@ export default function Login() {
             if(response.data === "unknown"){
                 window.alert("Invalid Credentials")
             }
+            else if(response.data.msg == "adminVerified"){
+                console.log(response.data.msg)
+                sessionStorage.setItem("token", response.data.token);
+                sessionStorage.setItem("user", response.data.user);
+                navigate("/Admin");
+            }
             else {
                 sessionStorage.setItem("token", response.data.token);
                 sessionStorage.setItem("user", response.data.user);

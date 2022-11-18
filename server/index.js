@@ -55,7 +55,6 @@ app.post("/register", (req, res)=>{
                 });
             }
             else{
-                console.log(result)
                 res.send("exist");
             }    
         })
@@ -65,25 +64,36 @@ app.post("/register", (req, res)=>{
 
 //LOGIN
 app.post("/login", (req, res)=>{
-    connection.query("SELECT * FROM user WHERE username = ? and password = ?", [req.body.username, req.body.password], (err, result, f)=> {
-        if(result.length > 0){
-            
-        let jwtSecretKey = "SOME_RANDOM_TEXT_JWT_SECRET_KEY";
-        let data = {
-            time: Date()
-        }
-  
+
+    let jwtSecretKey = "SOME_RANDOM_TEXT_JWT_SECRET_KEY";
+            let data = {
+                time: Date()
+            }
+
+    if(req.body.username == "admin" && req.body.password == "admin"){
         const token = jwt.sign(data, jwtSecretKey);
-            res.json({msg: "verified", token: token, user: req.body.username});
-        }
-        else{
-            res.json("unknown");
-        }
-    })
+        res.json({msg: "adminVerified", token: token, user: req.body.username});
+    }
+    else{
+        connection.query("SELECT * FROM user WHERE username = ? and password = ?", [req.body.username, req.body.password], (err, result, f)=> {
+            if(result.length > 0){
+                
+            
+      
+            const token = jwt.sign(data, jwtSecretKey);
+                res.json({msg: "verified", token: token, user: req.body.username});
+            }
+            else{
+                res.json("unknown");
+            }
+        })
+
+    }
+
+    
 })
 
 app.post("/addtocart", async (req, res)=>{
-    console.log(req.body);
     connection.query("INSERT INTO cart(pUser, pID, pName, pPrice) VALUES (?, ?, ?, ?)", [req.body.user, req.body.pId, req.body.pName, req.body.pPrice], (err, result)=>{
         if(err) throw err;
         console.log(result)
@@ -102,7 +112,14 @@ app.post("/getCount", async(req, res)=>{
 app.post("/getCart", async(req, res)=>{
     connection.query("SELECT * FROM cart WHERE pUser = ?", [req.body.username], (err, allProducts)=>{
         if(err) throw err;
-        console.log(allProducts)
+            res.send(allProducts);
+    })
+    
+})
+
+app.get("/getAdminCart", async(req, res)=>{
+    connection.query("SELECT * FROM cart", (err, allProducts)=>{
+        if(err) throw err;
             res.send(allProducts);
     })
     
@@ -111,7 +128,6 @@ app.post("/getCart", async(req, res)=>{
 app.post("/deleteProduct", async (req, res)=>{
     connection.query("DELETE FROM cart WHERE pUser = ? and id = ?", [req.body.username, req.body.id], (err, allProducts)=>{
         if(err) throw err;
-        console.log(allProducts)
             res.send(allProducts);
     })
 })

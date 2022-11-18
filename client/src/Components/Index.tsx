@@ -55,19 +55,10 @@ export default function Index() {
     .then((response)=>{
         if(response != null)
         setProducts(response.data);
+        //console.log(response.data);
       });
 
   }, [])
-
-  useEffect(()=>{
-    axios.post("http://localhost:5000/getCount", {username: username})
-    .then((response)=>{
-        if(response != null){
-            setCount(response.data[0].proCount);
-        }
-      })
-
-}) 
   
   return (
     <div>
