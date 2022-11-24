@@ -46,6 +46,7 @@ export default function Navbar() {
                         <div>
                             <button onClick={(e)=>{window.location.href="/"}}>Home</button>
                             <button onClick={(e)=>{window.location.href="/cart"}}>Cart {count} </button>
+                            <button onClick={(e)=>{window.location.href="/orders"}}>Orders</button>
                         </div>
                     }
 

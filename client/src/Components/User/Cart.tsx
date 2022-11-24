@@ -4,7 +4,7 @@ import './style.css'
 import {useNavigate} from 'react-router-dom'
 import {Container, Row, Col, Table} from 'react-bootstrap'
 
-import Navbar from './Navbar/Navbar';
+import Navbar from '../Navbar/Navbar';
 import axios from 'axios';
 
 type CartItem = {
@@ -49,6 +49,19 @@ export default function Cart() {
       })
   }
 
+  const handlePay = (): void =>{
+      axios.post("http://localhost:5000/pay", {username: username})
+        .then((response)=>{
+            if(response != null){
+               if(response.data === 'paid'){
+                window.alert("Item(s) paid");
+                window.location.reload();
+               }
+               
+            }
+          })
+  }
+
   return (
     <div>
       <Navbar />
@@ -76,14 +89,13 @@ export default function Cart() {
                   </tr>
                 )
             })}
-            <tr>
-              <td></td>
-              <td></td>
-              <td><h4>Amount:</h4></td>
-              <td><h4>{finalAmount}/-</h4></td>
-            </tr>
             </tbody>
           </Table>
+          <hr />
+          <div className='Amount'>
+              <h4>Amount: Rs. {finalAmount}/-</h4>
+              <button onClick={handlePay}>Pay</button>
+          </div>
       </Container>
     </div>
   )

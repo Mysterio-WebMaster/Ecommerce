@@ -94,7 +94,7 @@ app.post("/login", (req, res)=>{
 })
 
 app.post("/addtocart", async (req, res)=>{
-    connection.query("INSERT INTO cart(pUser, pID, pName, pPrice) VALUES (?, ?, ?, ?)", [req.body.user, req.body.pId, req.body.pName, req.body.pPrice], (err, result)=>{
+    connection.query("INSERT INTO userProduct(pUser, pID, pName, pPrice, status) VALUES (?, ?, ?, ?, ?)", [req.body.user, req.body.pId, req.body.pName, req.body.pPrice, 'cart'], (err, result)=>{
         if(err) throw err;
         console.log(result)
         //res.send(result)
@@ -103,14 +103,14 @@ app.post("/addtocart", async (req, res)=>{
 })
 
 app.post("/getCount", async(req, res)=>{
-    connection.query("SELECT COUNT(pID) as proCount FROM cart WHERE pUser = ?", [req.body.username], (err, result)=>{
+    connection.query("SELECT COUNT(pID) as proCount FROM userProduct WHERE pUser = ? and status = ?", [req.body.username, 'cart'], (err, result)=>{
         if(err) throw err;
         res.send(result)
     })
 })
 
 app.post("/getCart", async(req, res)=>{
-    connection.query("SELECT * FROM cart WHERE pUser = ?", [req.body.username], (err, allProducts)=>{
+    connection.query("SELECT * FROM userProduct WHERE pUser = ? and status = ?", [req.body.username, 'cart'], (err, allProducts)=>{
         if(err) throw err;
             res.send(allProducts);
     })
@@ -118,7 +118,7 @@ app.post("/getCart", async(req, res)=>{
 })
 
 app.get("/getAdminCart", async(req, res)=>{
-    connection.query("SELECT * FROM cart", (err, allProducts)=>{
+    connection.query("SELECT * FROM userProduct WHERE status = ?", ['cart'], (err, allProducts)=>{
         if(err) throw err;
             res.send(allProducts);
     })
@@ -126,10 +126,33 @@ app.get("/getAdminCart", async(req, res)=>{
 })
 
 app.post("/deleteProduct", async (req, res)=>{
-    connection.query("DELETE FROM cart WHERE pUser = ? and id = ?", [req.body.username, req.body.id], (err, allProducts)=>{
+    connection.query("DELETE FROM userProduct WHERE pUser = ? and id = ? and status = ?", [req.body.username, req.body.id, 'cart'], (err, allProducts)=>{
         if(err) throw err;
             res.send(allProducts);
     })
+})
+
+app.post("/pay", async (req, res)=>{
+    connection.query("UPDATE userProduct SET status = ? WHERE pUser = ? and status = ?", ['paid', req.body.username, 'cart'], (err)=>{
+        if(err) throw err;
+            res.send("paid");
+    })
+})
+
+app.post("/getOrders", async(req, res)=>{
+    connection.query("SELECT * FROM userProduct WHERE pUser = ? and status = ?", [req.body.username, 'paid'], (err, allProducts)=>{
+        if(err) throw err;
+            res.send(allProducts);
+    })
+    
+})
+
+app.get("/getAdminOrders", async(req, res)=>{
+    connection.query("SELECT * FROM userProduct WHERE status = ?", ['paid'], (err, allProducts)=>{
+        if(err) throw err;
+            res.send(allProducts);
+    })
+    
 })
 
 

@@ -6,3 +6,11 @@
     margin: 25px auto;
     padding: 15px;
 }
+
+.Amount{
+    text-align: right;
+}
+
+.Amount button{
+    width: 120px;
+}
